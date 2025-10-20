@@ -27,6 +27,7 @@ class Registro_act : AppCompatActivity() {
             val contrasena = etContrasena.text.toString()
             val confirmarContrasena = etConfirmarContrasena.text.toString()
             val hola = "Hola"
+            val sad = "Hola"
 
             if (nombreCompleto.isNotEmpty() && correo.isNotEmpty() && contrasena.isNotEmpty() && confirmarContrasena.isNotEmpty()) {
                 if (contrasena == confirmarContrasena) {
