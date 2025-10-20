@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Veterinaria">
         <activity
+            android:name=".AgendarHora_act"
+            android:exported="false" />
+        <activity
             android:name=".InicioSesion_act"
             android:exported="false" />
         <activity
