@@ -21,8 +21,6 @@ class InicioAdmin_act : AppCompatActivity() {
         }
 
         btnGestionarUsuarios.setOnClickListener {
-            val intent = Intent(this, GestionarUsuarios_act::class.java)
-            startActivity(intent)
         }
 
         btnVerHistorialMascotas.setOnClickListener {

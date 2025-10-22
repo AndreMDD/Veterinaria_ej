@@ -12,26 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Veterinaria">
         <activity
-            android:name=".GestionarUsuarios_act"
-            android:exported="false" />
-        <activity
-            android:name=".CitasAgendadasAdmin_act"
-            android:exported="false" />
-        <activity
-            android:name=".InicioAdmin_act"
-            android:exported="false" />
-        <activity
             android:name=".AgendarHora_act"
             android:exported="false" />
         <activity
             android:name=".InicioSesion_act"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".Registro_act"
             android:exported="false" />
@@ -40,7 +25,13 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
