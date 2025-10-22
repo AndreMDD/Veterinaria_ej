@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Veterinaria">
         <activity
+            android:name=".GestionarUsuarios_act"
+            android:exported="false" />
+        <activity
             android:name=".CitasAgendadasAdmin_act"
             android:exported="false" />
         <activity

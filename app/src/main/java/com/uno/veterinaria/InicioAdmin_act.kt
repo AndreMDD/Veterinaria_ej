@@ -21,8 +21,8 @@ class InicioAdmin_act : AppCompatActivity() {
         }
 
         btnGestionarUsuarios.setOnClickListener {
-            // Lógica para gestionar usuarios
-            Toast.makeText(this, "Función para gestionar usuarios próximamente", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, GestionarUsuarios_act::class.java)
+            startActivity(intent)
         }
 
         btnVerHistorialMascotas.setOnClickListener {
