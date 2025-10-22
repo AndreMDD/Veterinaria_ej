@@ -49,9 +49,15 @@
 
             <Button style="?android:attr/borderlessButtonStyle" android:id="@+id/inicio_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Inicio" android:textAllCaps="false" android:textColor="#5f6368"/>
             <Button style="?android:attr/borderlessButtonStyle" android:id="@+id/servicio_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Servicios" android:textAllCaps="false" android:textColor="#5f6368"/>
-            <Button style="?android:attr/borderlessButtonStyle" android:id="@+id/nosotros_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nosotros" android:textAllCaps="false" android:textColor="#5f6368"/>
-            <Button style="?android:attr/borderlessButtonStyle" android:id="@+id/blog_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Blog" android:textAllCaps="false" android:textColor="#5f6368"/>
-            <Button style="?android:attr/borderlessButtonStyle" android:id="@+id/contacto_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Contacto" android:textAllCaps="false" android:textColor="#5f6368"/>
+
+            <Button
+                android:id="@+id/horas_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Horas"
+                android:textAllCaps="false"
+                android:textColor="#5f6368" />
         </LinearLayout>
 
         <!-- Hero Section -->

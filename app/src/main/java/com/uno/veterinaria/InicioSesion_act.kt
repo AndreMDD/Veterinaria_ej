@@ -7,12 +7,23 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import models.DBHelper
 
 class InicioSesion_act : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio_sesion)
+
+        val dbHelper = DBHelper(this)
+
+        // Agregar usuarios de prueba si no existen
+        if (!dbHelper.checkUserExists("admin@test.com")) {
+            dbHelper.agregarUsuario("Administrador", "admin@test.com", "admin123", "123456789", "admin")
+        }
+        if (!dbHelper.checkUserExists("user@test.com")) {
+            dbHelper.agregarUsuario("Usuario de Prueba", "user@test.com", "user123", "987654321", "user")
+        }
 
         val etCorreo = findViewById<EditText>(R.id.etCorreo)
         val etContrasena = findViewById<EditText>(R.id.etContrasena)
@@ -24,11 +35,16 @@ class InicioSesion_act : AppCompatActivity() {
             val contrasena = etContrasena.text.toString()
 
             if (correo.isNotEmpty() && contrasena.isNotEmpty()) {
-                // Lógica de inicio de sesión (puedes agregar aquí la integración con Firebase o una base de datos local)
-                if (correo == "test@test.com" && contrasena == "123456") {
+                val role = dbHelper.checkUser(correo, contrasena)
+                if (role != null) {
                     Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
+                    if (role == "admin") {
+                        val intent = Intent(this, InicioAdmin_act::class.java)
+                        startActivity(intent)
+                    } else {
+                        val intent = Intent(this, Inicio_act::class.java)
+                        startActivity(intent)
+                    }
                     finish()
                 } else {
                     Toast.makeText(this, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show()
