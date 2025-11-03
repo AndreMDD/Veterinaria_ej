@@ -1,10 +1,12 @@
 package com.uno.veterinaria
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputEditText
 import models.DBHelper
 
 class GestionarUsuarios_act : AppCompatActivity() {
@@ -14,10 +16,10 @@ class GestionarUsuarios_act : AppCompatActivity() {
 
         val dbHelper = DBHelper(this)
 
-        val etNombreCompleto = findViewById<EditText>(R.id.etNombreCompleto)
-        val etCorreo = findViewById<EditText>(R.id.etCorreo)
-        val etTelefono = findViewById<EditText>(R.id.etTelefono)
-        val etContrasena = findViewById<EditText>(R.id.etContrasena)
+        val etNombreCompleto = findViewById<TextInputEditText>(R.id.etNombreCompleto)
+        val etCorreo = findViewById<TextInputEditText>(R.id.etCorreo)
+        val etTelefono = findViewById<TextInputEditText>(R.id.etTelefono)
+        val etContrasena = findViewById<TextInputEditText>(R.id.etContrasena)
         val btnRegistrarAdmin = findViewById<Button>(R.id.btnRegistrarAdmin)
 
         btnRegistrarAdmin.setOnClickListener {
@@ -45,5 +47,12 @@ class GestionarUsuarios_act : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    fun volver(view: View) {
+        val intent = Intent(this, InicioAdmin_act::class.java)
+        // Limpiamos la pila de actividades para una navegación más limpia
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 }

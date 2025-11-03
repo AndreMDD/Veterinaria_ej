@@ -8,5 +8,7 @@ data class Cita(
     val nombreDueno: String,
     val fecha: String,
     val hora: String,
-    val motivo: String
+    val motivo: String,
+    val raza: String,
+    val edad: String
 )

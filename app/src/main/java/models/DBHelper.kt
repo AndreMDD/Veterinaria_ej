@@ -6,29 +6,19 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DBHelper (context: Context): SQLiteOpenHelper (context, "db_veterinaria", null, 1) {
+class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_database_final", null, 11) { // VERSIÓN AUMENTADA
 
     companion object{
-        private const val db_name = "db_veterinaria"
-        private const val db_version = 1
+        // --- TABLA USUARIOS ---
         private const val tabla_usuarios = "Usuarios"
         private const val col_id = "id"
         private const val col_nombre = "nombre"
         private const val col_correo = "correo"
         private const val col_contrasena = "contrasena"
         private const val col_telefono = "telefono"
-        private const val col_rol = "rol" // Columna para el rol
+        private const val col_rol = "rol"
 
-        // tabla mascotas
-        private const val tabla_mascotas = "Mascotas"
-        private const val col_id_mascota = "id_mascota"
-        private const val col_nombre_mascota = "nombre_mascota"
-        private const val col_raza = "raza"
-        private const val col_edad = "edad"
-        private const val col_peso = "peso"
-        private const val col_id_usuario = "id_usuario"
-
-        // tabla citas
+        // --- TABLA CITAS ---
         private const val TABLA_CITAS = "Citas"
         private const val COL_ID_CITA = "id_cita"
         private const val COL_NOMBRE_MASCOTA_CITA = "nombre_mascota"
@@ -38,6 +28,8 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "db_veterinaria", 
         private const val COL_FECHA = "fecha"
         private const val COL_HORA = "hora"
         private const val COL_MOTIVO = "motivo"
+        private const val COL_RAZA_MASCOTA = "raza_mascota"
+        private const val COL_EDAD_MASCOTA = "edad_mascota"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -63,7 +55,9 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "db_veterinaria", 
                 $COL_NOMBRE_DUENO TEXT,
                 $COL_FECHA TEXT,
                 $COL_HORA TEXT,
-                $COL_MOTIVO TEXT
+                $COL_MOTIVO TEXT,
+                $COL_RAZA_MASCOTA TEXT,
+                $COL_EDAD_MASCOTA TEXT
             )
         """.trimIndent()
         db?.execSQL(crearTablaCitas)
@@ -74,12 +68,14 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "db_veterinaria", 
         oldVersion: Int,
         newVersion: Int
     ) {
+        // En un entorno de producción, aquí se haría una migración de datos.
+        // Para un ejemplo académico, simplemente recreamos las tablas.
         db?.execSQL("DROP TABLE IF EXISTS $tabla_usuarios")
         db?.execSQL("DROP TABLE IF EXISTS $TABLA_CITAS")
         onCreate(db)
     }
 
-    fun agregarCita(nombreMascota: String, sexoMascota: String, chipMascota: String, nombreDueno: String, fecha: String, hora: String, motivo: String): Long {
+    fun agregarCita(nombreMascota: String, sexoMascota: String, chipMascota: String, nombreDueno: String, fecha: String, hora: String, motivo: String, raza: String, edad: String): Long {
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(COL_NOMBRE_MASCOTA_CITA, nombreMascota)
@@ -89,6 +85,8 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "db_veterinaria", 
         values.put(COL_FECHA, fecha)
         values.put(COL_HORA, hora)
         values.put(COL_MOTIVO, motivo)
+        values.put(COL_RAZA_MASCOTA, raza)
+        values.put(COL_EDAD_MASCOTA, edad)
         val result = db.insert(TABLA_CITAS, null, values)
         db.close()
         return result
@@ -99,7 +97,7 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "db_veterinaria", 
         val values = ContentValues()
         values.put(col_nombre, nombre)
         values.put(col_correo, correo)
-        values.put(col_contrasena, contrasena) // Es recomendable usar un método de hash para las contraseñas
+        values.put(col_contrasena, contrasena)
         values.put(col_telefono, telefono)
         values.put(col_rol, rol)
         val result = db.insert(tabla_usuarios, null, values)
@@ -154,7 +152,37 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "db_veterinaria", 
                 val fecha = cursor.getString(cursor.getColumnIndex(COL_FECHA))
                 val hora = cursor.getString(cursor.getColumnIndex(COL_HORA))
                 val motivo = cursor.getString(cursor.getColumnIndex(COL_MOTIVO))
-                citas.add(Cita(id, nombreMascota, sexoMascota, chipMascota, nombreDueno, fecha, hora, motivo))
+                val raza = cursor.getString(cursor.getColumnIndex(COL_RAZA_MASCOTA))
+                val edad = cursor.getString(cursor.getColumnIndex(COL_EDAD_MASCOTA))
+                citas.add(Cita(id, nombreMascota, sexoMascota, chipMascota, nombreDueno, fecha, hora, motivo, raza, edad))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return citas
+    }
+
+    @SuppressLint("Range")
+    fun getCitasByDueno(nombreDueno: String): List<Cita> {
+        val citas = mutableListOf<Cita>()
+        val db = readableDatabase
+        val query = "SELECT * FROM $TABLA_CITAS WHERE $COL_NOMBRE_DUENO = ?"
+        val cursor = db.rawQuery(query, arrayOf(nombreDueno))
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndex(COL_ID_CITA))
+                val nombreMascota = cursor.getString(cursor.getColumnIndex(COL_NOMBRE_MASCOTA_CITA))
+                val sexoMascota = cursor.getString(cursor.getColumnIndex(COL_SEXO_MASCOTA))
+                val chipMascota = cursor.getString(cursor.getColumnIndex(COL_CHIP_MASCOTA))
+                val dueno = cursor.getString(cursor.getColumnIndex(COL_NOMBRE_DUENO))
+                val fecha = cursor.getString(cursor.getColumnIndex(COL_FECHA))
+                val hora = cursor.getString(cursor.getColumnIndex(COL_HORA))
+                val motivo = cursor.getString(cursor.getColumnIndex(COL_MOTIVO))
+                val raza = cursor.getString(cursor.getColumnIndex(COL_RAZA_MASCOTA))
+                val edad = cursor.getString(cursor.getColumnIndex(COL_EDAD_MASCOTA))
+                citas.add(Cita(id, nombreMascota, sexoMascota, chipMascota, dueno, fecha, hora, motivo, raza, edad))
             } while (cursor.moveToNext())
         }
 
