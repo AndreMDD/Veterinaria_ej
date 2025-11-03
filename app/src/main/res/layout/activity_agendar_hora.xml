@@ -16,9 +16,9 @@
         android:layout_marginTop="16dp"
         android:onClick="volver"
         android:text="Volver"
-        android:textColor="@color/black"
+        android:textColor="@android:color/white"
         app:icon="@drawable/ic_action_arrow_back"
-        app:iconTint="@color/black"
+        app:iconTint="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Agendar Hora"
-        android:textColor="@color/black"
+        android:textColor="@android:color/white"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -210,7 +210,7 @@
                                 android:layout_height="wrap_content"
                                 android:focusable="false"
                                 android:clickable="true"/>
-                        </.google.android.material.textfield.TextInputLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
