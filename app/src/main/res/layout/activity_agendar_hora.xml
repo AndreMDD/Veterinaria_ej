@@ -16,9 +16,9 @@
         android:layout_marginTop="16dp"
         android:onClick="volver"
         android:text="Volver"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         app:icon="@drawable/ic_action_arrow_back"
-        app:iconTint="@android:color/white"
+        app:iconTint="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Agendar Hora"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,10 +88,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:hint="Raza">
+                        android:hint="Especie">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etRazaMascota"
+                            android:id="@+id/etEspecieMascota"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>

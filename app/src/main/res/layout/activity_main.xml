@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Patitas Felices"
-        android:textColor="@android:color/white"
+        android:textColor="@color/black"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +70,9 @@
                     android:id="@+id/etCorreo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
+                    android:hint="Correo electronico"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="48dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -87,7 +89,9 @@
                     android:id="@+id/etContrasena"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
+                    android:hint="Contraseña"
+                    android:inputType="textPassword"
+                    android:minHeight="48dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

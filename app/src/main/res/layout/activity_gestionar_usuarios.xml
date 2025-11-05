@@ -16,9 +16,9 @@
         android:layout_marginTop="16dp"
         android:onClick="volver"
         android:text="Volver"
-        android:textColor="@android:color/white"
+        android:textColor="@color/black"
         app:icon="@drawable/ic_action_arrow_back"
-        app:iconTint="@android:color/white"
+        app:iconTint="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Registrar Administrador"
-        android:textColor="@android:color/white"
+        android:textColor="@color/black"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,6 +67,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombreCompleto"
+                        android:hint="Nombre Completo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName" />
@@ -81,6 +82,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etCorreo"
+                        android:hint="Correo electrónico"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress" />
@@ -95,6 +97,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTelefono"
+                        android:hint="Teléfono"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="phone" />
@@ -110,6 +113,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etContrasena"
+                        android:hint="Contraseña"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword" />

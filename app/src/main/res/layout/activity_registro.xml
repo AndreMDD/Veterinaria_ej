@@ -7,39 +7,24 @@
     android:background="@drawable/gradient_fondo"
     tools:context=".Registro_act">
 
-    <Button
-        android:id="@+id/btnVolver"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:onClick="volver"
-        android:text="Volver"
-        android:textColor="@android:color/white"
-        app:icon="@drawable/ic_action_arrow_back"
-        app:iconTint="@android:color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="72dp"
         android:text="Crear Cuenta"
-        android:textColor="@android:color/white"
+        android:textColor="@color/black"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnVolver" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvIniciarSesion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitulo">
@@ -67,9 +52,11 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombreCompleto"
+                        android:hint="Nombre completo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName" />
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -81,9 +68,11 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etCorreo"
+                        android:hint="Correo electrónico"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:minHeight="48dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -95,9 +84,11 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTelefono"
+                        android:hint="Teléfono"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="phone" />
+                        android:inputType="phone"
+                        android:minHeight="48dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -110,9 +101,11 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etContrasena"
+                        android:hint="Contraseña"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:minHeight="48dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -125,9 +118,11 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etConfirmarContrasena"
+                        android:hint="Confirmar contraseña"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:minHeight="48dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
@@ -147,9 +142,10 @@
         android:id="@+id/tvIniciarSesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:padding="16dp"
         android:text="¿Ya tienes una cuenta? Inicia sesión"
         android:textColor="@android:color/white"
-        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

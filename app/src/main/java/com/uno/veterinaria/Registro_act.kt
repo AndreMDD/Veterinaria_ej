@@ -38,7 +38,7 @@ class Registro_act : AppCompatActivity() {
                         val result = dbHelper.agregarUsuario(nombreCompleto, correo, contrasena, telefono, "user")
                         if (result > -1) {
                             Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, InicioSesion_act::class.java)
+                            val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {
@@ -56,7 +56,7 @@ class Registro_act : AppCompatActivity() {
         }
 
         tvIniciarSesion.setOnClickListener {
-            val intent = Intent(this, InicioSesion_act::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }

@@ -3,9 +3,9 @@ package com.uno.veterinaria
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
-class FichaClinica_act : AppCompatActivity() {
+class Profile_act : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ficha_clinica)
+        setContentView(R.layout.activity_profile)
     }
 }

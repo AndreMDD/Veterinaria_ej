@@ -22,7 +22,7 @@ class AgendarHora_act : AppCompatActivity() {
 
         // Referencias a los nuevos componentes de Material Design
         val etNombreMascota = findViewById<TextInputEditText>(R.id.etNombreMascota)
-        val etRazaMascota = findViewById<TextInputEditText>(R.id.etRazaMascota)
+        val etEspecieMascota = findViewById<TextInputEditText>(R.id.etEspecieMascota)
         val etEdadMascota = findViewById<TextInputEditText>(R.id.etEdadMascota)
         val etSexoMascota = findViewById<TextInputEditText>(R.id.etSexoMascota)
         val etChipMascota = findViewById<TextInputEditText>(R.id.etChipMascota)
@@ -35,7 +35,7 @@ class AgendarHora_act : AppCompatActivity() {
         // Lógica para agendar la cita
         btnAgendar.setOnClickListener {
             val nombreMascota = etNombreMascota.text.toString()
-            val raza = etRazaMascota.text.toString()
+            val especie = etEspecieMascota.text.toString()
             val edad = etEdadMascota.text.toString()
             val sexoMascota = etSexoMascota.text.toString()
             val chipMascota = etChipMascota.text.toString()
@@ -44,20 +44,27 @@ class AgendarHora_act : AppCompatActivity() {
             val hora = etHora.text.toString()
             val motivo = etMotivo.text.toString()
 
-            if (nombreMascota.isNotEmpty() && raza.isNotEmpty() && edad.isNotEmpty() && sexoMascota.isNotEmpty() && nombreDueno.isNotEmpty() && fecha.isNotEmpty() && hora.isNotEmpty() && motivo.isNotEmpty()) {
-                val result = dbHelper.agregarCita(nombreMascota, sexoMascota, chipMascota, nombreDueno, fecha, hora, motivo, raza, edad)
+            if (nombreMascota.isNotEmpty() && especie.isNotEmpty() &&
+                edad.isNotEmpty() && sexoMascota.isNotEmpty() && nombreDueno.isNotEmpty() &&
+                fecha.isNotEmpty() && hora.isNotEmpty() && motivo.isNotEmpty()) {
+                val result = dbHelper.agregarCita(nombreMascota, sexoMascota,
+                    chipMascota, nombreDueno, fecha, hora, motivo, especie, edad)
                 if (result > -1) {
-                    Toast.makeText(this, "Hora agendada correctamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Hora agendada correctamente"
+                        , Toast.LENGTH_SHORT).show()
                     // Navegamos a Inicio y limpiamos el historial
                     val intent = Intent(this, Inicio_act::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this, "Error al agendar la hora", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error al agendar la hora"
+                        , Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor, complete todos los campos"
+                    , Toast.LENGTH_SHORT).show()
             }
         }
     }

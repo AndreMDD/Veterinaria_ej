@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import models.DBHelper
 
-class CitasAgendadasAdmin_act : AppCompatActivity() {
+class CitasAgendadas_act : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_citas_agendadas_admin)
+        setContentView(R.layout.activity_citas_agendadas)
 
         val dbHelper = DBHelper(this)
         val rvCitas = findViewById<RecyclerView>(R.id.rvCitas)
