@@ -33,10 +33,10 @@ class GestionarUsuarios_act : AppCompatActivity() {
                     val result = dbHelper.agregarUsuario(nombreCompleto, correo, contrasena, telefono, "admin")
                     if (result > -1) {
                         Toast.makeText(this, "Administrador registrado exitosamente", Toast.LENGTH_SHORT).show()
-                        etNombreCompleto.text.clear()
-                        etCorreo.text.clear()
-                        etTelefono.text.clear()
-                        etContrasena.text.clear()
+                        etNombreCompleto.text?.clear()
+                        etCorreo.text?.clear()
+                        etTelefono.text?.clear()
+                        etContrasena.text?.clear()
                     } else {
                         Toast.makeText(this, "Error al registrar el administrador", Toast.LENGTH_SHORT).show()
                     }
