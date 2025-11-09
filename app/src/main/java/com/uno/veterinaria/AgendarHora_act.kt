@@ -9,6 +9,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import models.DBHelper
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -20,6 +21,7 @@ class AgendarHora_act : AppCompatActivity() {
     private lateinit var tilEspecieMascota: TextInputLayout
     private lateinit var tilEdadMascota: TextInputLayout
     private lateinit var tilSexoMascota: TextInputLayout
+    private lateinit var tilChipMascota: TextInputLayout
     private lateinit var tilNombreDueno: TextInputLayout
     private lateinit var tilFecha: TextInputLayout
     private lateinit var tilHora: TextInputLayout
@@ -34,6 +36,7 @@ class AgendarHora_act : AppCompatActivity() {
         tilEspecieMascota = findViewById(R.id.tilEspecieMascota)
         tilEdadMascota = findViewById(R.id.tilEdadMascota)
         tilSexoMascota = findViewById(R.id.tilSexoMascota)
+        tilChipMascota = findViewById(R.id.tilChipMascota)
         tilNombreDueno = findViewById(R.id.tilNombreDueno)
         tilFecha = findViewById(R.id.tilFecha)
         tilHora = findViewById(R.id.tilHora)
@@ -50,23 +53,50 @@ class AgendarHora_act : AppCompatActivity() {
 
         findViewById<View>(R.id.btnAgendar).setOnClickListener {
             if (validateFields()) {
-                // Lógica para guardar la cita
-                Toast.makeText(this, "Cita agendada exitosamente", Toast.LENGTH_SHORT).show()
+                val dbHelper = DBHelper(this)
+                val nombreMascota = tilNombreMascota.editText?.text.toString()
+                val especieMascota = tilEspecieMascota.editText?.text.toString()
+                val edadMascota = tilEdadMascota.editText?.text.toString()
+                val sexoMascota = tilSexoMascota.editText?.text.toString()
+                val chipMascota = tilChipMascota.editText?.text.toString()
+                val nombreDueno = tilNombreDueno.editText?.text.toString()
+                val fecha = tilFecha.editText?.text.toString()
+                val hora = tilHora.editText?.text.toString()
+                val motivo = tilMotivo.editText?.text.toString()
 
-                // Borrar datos de las casillas
-                tilNombreMascota.editText?.text?.clear()
-                tilEspecieMascota.editText?.text?.clear()
-                tilEdadMascota.editText?.text?.clear()
-                tilSexoMascota.editText?.text?.clear()
-                tilNombreDueno.editText?.text?.clear()
-                tilFecha.editText?.text?.clear()
-                tilHora.editText?.text?.clear()
-                tilMotivo.editText?.text?.clear()
+                val result = dbHelper.agregarCita(
+                    nombreMascota,
+                    sexoMascota,
+                    chipMascota,
+                    nombreDueno,
+                    fecha,
+                    hora,
+                    motivo,
+                    especieMascota, // Corregido
+                    edadMascota
+                )
 
-                // Redirigir a Inicio_act
-                val intent = Intent(this, Inicio_act::class.java)
-                startActivity(intent)
-                finish() // Cierra la actividad actual
+                if (result != -1L) {
+                    Toast.makeText(this, "Cita agendada exitosamente", Toast.LENGTH_SHORT).show()
+
+                    // Borrar datos de las casillas
+                    tilNombreMascota.editText?.text?.clear()
+                    tilEspecieMascota.editText?.text?.clear()
+                    tilEdadMascota.editText?.text?.clear()
+                    tilSexoMascota.editText?.text?.clear()
+                    tilChipMascota.editText?.text?.clear()
+                    tilNombreDueno.editText?.text?.clear()
+                    tilFecha.editText?.text?.clear()
+                    tilHora.editText?.text?.clear()
+                    tilMotivo.editText?.text?.clear()
+
+                    // Redirigir a Inicio_act
+                    val intent = Intent(this, Inicio_act::class.java)
+                    startActivity(intent)
+                    finish() // Cierra la actividad actual
+                } else {
+                    Toast.makeText(this, "Error al agendar la cita", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -78,9 +108,8 @@ class AgendarHora_act : AppCompatActivity() {
             .build()
 
         datePicker.addOnPositiveButtonClickListener { selection ->
-            // The selection is in UTC milliseconds. Convert it to a readable date string.
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            sdf.timeZone = TimeZone.getTimeZone("UTC") // Important: Use UTC to format the selection
+            sdf.timeZone = TimeZone.getTimeZone("UTC")
             val date = sdf.format(Date(selection))
             tilFecha.editText?.setText(date)
         }
@@ -110,12 +139,12 @@ class AgendarHora_act : AppCompatActivity() {
         tilEspecieMascota.error = null
         tilEdadMascota.error = null
         tilSexoMascota.error = null
+        tilChipMascota.error = null
         tilNombreDueno.error = null
         tilFecha.error = null
         tilHora.error = null
         tilMotivo.error = null
 
-        // Validation logic
         var isValid = true
         if (tilNombreMascota.editText?.text.toString().trim().isEmpty()) {
             tilNombreMascota.error = "El campo debe estar completo"
@@ -132,6 +161,9 @@ class AgendarHora_act : AppCompatActivity() {
         if (tilSexoMascota.editText?.text.toString().trim().isEmpty()) {
             tilSexoMascota.error = "El campo debe estar completo"
             isValid = false
+        }
+        if (tilChipMascota.editText?.text.toString().trim().isEmpty()) {
+            // Opcional, no se valida
         }
         if (tilNombreDueno.editText?.text.toString().trim().isEmpty()) {
             tilNombreDueno.error = "El campo debe estar completo"

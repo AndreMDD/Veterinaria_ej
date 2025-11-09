@@ -9,6 +9,6 @@ data class Cita(
     val fecha: String,
     val hora: String,
     val motivo: String,
-    val raza: String,
+    val especie: String, // Cambiado a 'especie'
     val edad: String
 )

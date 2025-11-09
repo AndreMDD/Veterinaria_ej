@@ -40,7 +40,7 @@ class CitaAdapter(private val citas: List<Cita>) : RecyclerView.Adapter<CitaAdap
                 val context = it.context
                 val intent = Intent(context, FichaClinica_act::class.java).apply {
                     putExtra("nombreMascota", cita.nombreMascota)
-                    putExtra("especieMascota", cita.raza) // Corregido: 'raza' en lugar de 'especie'
+                    putExtra("especieMascota", cita.especie)
                     putExtra("edadMascota", cita.edad)
                     putExtra("fechaCita", "${cita.fecha} - ${cita.hora}")
                     putExtra("motivoCita", cita.motivo)

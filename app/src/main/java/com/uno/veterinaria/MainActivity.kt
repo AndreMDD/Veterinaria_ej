@@ -1,5 +1,6 @@
 package com.uno.veterinaria
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val dbHelper = DBHelper(this)
+        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
         // Agregar usuarios y mascota de prueba si no existen
         if (!dbHelper.checkUserExists("admin@test.com")) {
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                     fecha = "2024-05-20",
                     hora = "10:00",
                     motivo = "Vacunación anual",
-                    raza = "Perro",
+                    especie = "Perro",
                     edad = "5"
                 )
             }
@@ -51,9 +53,18 @@ class MainActivity : AppCompatActivity() {
             val contrasena = etContrasena.text.toString()
 
             if (correo.isNotEmpty() && contrasena.isNotEmpty()) {
-                val role = dbHelper.checkUser(correo, contrasena)
-                if (role != null) {
+                val userInfo = dbHelper.checkUser(correo, contrasena)
+                if (userInfo != null) {
+                    val (role, name) = userInfo
                     Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+
+                    // Guardar datos del usuario en SharedPreferences
+                    with(sharedPreferences.edit()) {
+                        putString("user_name", name)
+                        putString("user_role", role)
+                        apply()
+                    }
+
                     if (role == "admin") {
                         val intent = Intent(this, InicioAdmin_act::class.java)
                         startActivity(intent)

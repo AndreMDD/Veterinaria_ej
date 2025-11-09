@@ -6,7 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_database_final", null, 11) { // VERSIÓN AUMENTADA
+class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_db_v3", null, 1) { // DB Renombrada y versión reseteada
 
     companion object{
         // --- TABLA USUARIOS ---
@@ -28,7 +28,7 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_datab
         private const val COL_FECHA = "fecha"
         private const val COL_HORA = "hora"
         private const val COL_MOTIVO = "motivo"
-        private const val COL_RAZA_MASCOTA = "raza_mascota"
+        private const val COL_ESPECIE_MASCOTA = "especie_mascota"
         private const val COL_EDAD_MASCOTA = "edad_mascota"
     }
 
@@ -56,7 +56,7 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_datab
                 $COL_FECHA TEXT,
                 $COL_HORA TEXT,
                 $COL_MOTIVO TEXT,
-                $COL_RAZA_MASCOTA TEXT,
+                $COL_ESPECIE_MASCOTA TEXT,
                 $COL_EDAD_MASCOTA TEXT
             )
         """.trimIndent()
@@ -68,14 +68,12 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_datab
         oldVersion: Int,
         newVersion: Int
     ) {
-        // En un entorno de producción, aquí se haría una migración de datos.
-        // Para un ejemplo académico, simplemente recreamos las tablas.
         db?.execSQL("DROP TABLE IF EXISTS $tabla_usuarios")
         db?.execSQL("DROP TABLE IF EXISTS $TABLA_CITAS")
         onCreate(db)
     }
 
-    fun agregarCita(nombreMascota: String, sexoMascota: String, chipMascota: String, nombreDueno: String, fecha: String, hora: String, motivo: String, raza: String, edad: String): Long {
+    fun agregarCita(nombreMascota: String, sexoMascota: String, chipMascota: String, nombreDueno: String, fecha: String, hora: String, motivo: String, especie: String, edad: String): Long {
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(COL_NOMBRE_MASCOTA_CITA, nombreMascota)
@@ -85,7 +83,7 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_datab
         values.put(COL_FECHA, fecha)
         values.put(COL_HORA, hora)
         values.put(COL_MOTIVO, motivo)
-        values.put(COL_RAZA_MASCOTA, raza)
+        values.put(COL_ESPECIE_MASCOTA, especie)
         values.put(COL_EDAD_MASCOTA, edad)
         val result = db.insert(TABLA_CITAS, null, values)
         db.close()
@@ -105,22 +103,26 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_datab
         return result
     }
 
-    fun checkUser(correo: String, contrasena: String): String? {
+    // Devuelve un par (Rol, Nombre) o null si el usuario no existe
+    fun checkUser(correo: String, contrasena: String): Pair<String, String>? {
         val db = this.readableDatabase
-        val columns = arrayOf(col_rol)
+        val columns = arrayOf(col_rol, col_nombre)
         val selection = "$col_correo = ? AND $col_contrasena = ?"
         val selectionArgs = arrayOf(correo, contrasena)
         val cursor = db.query(tabla_usuarios, columns, selection, selectionArgs, null, null, null)
-        var role: String? = null
+        var result: Pair<String, String>? = null
         if (cursor.moveToFirst()) {
             val roleColumnIndex = cursor.getColumnIndex(col_rol)
-            if (roleColumnIndex != -1) {
-                role = cursor.getString(roleColumnIndex)
+            val nameColumnIndex = cursor.getColumnIndex(col_nombre)
+            if (roleColumnIndex != -1 && nameColumnIndex != -1) {
+                val role = cursor.getString(roleColumnIndex)
+                val name = cursor.getString(nameColumnIndex)
+                result = Pair(role, name)
             }
         }
         cursor.close()
         db.close()
-        return role
+        return result
     }
 
     fun checkUserExists(correo: String): Boolean {
@@ -164,9 +166,9 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_datab
                 val fecha = cursor.getString(cursor.getColumnIndex(COL_FECHA))
                 val hora = cursor.getString(cursor.getColumnIndex(COL_HORA))
                 val motivo = cursor.getString(cursor.getColumnIndex(COL_MOTIVO))
-                val raza = cursor.getString(cursor.getColumnIndex(COL_RAZA_MASCOTA))
+                val especie = cursor.getString(cursor.getColumnIndex(COL_ESPECIE_MASCOTA))
                 val edad = cursor.getString(cursor.getColumnIndex(COL_EDAD_MASCOTA))
-                citas.add(Cita(id, nombreMascota, sexoMascota, chipMascota, nombreDueno, fecha, hora, motivo, raza, edad))
+                citas.add(Cita(id, nombreMascota, sexoMascota, chipMascota, nombreDueno, fecha, hora, motivo, especie, edad))
             } while (cursor.moveToNext())
         }
 
@@ -192,9 +194,9 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_datab
                 val fecha = cursor.getString(cursor.getColumnIndex(COL_FECHA))
                 val hora = cursor.getString(cursor.getColumnIndex(COL_HORA))
                 val motivo = cursor.getString(cursor.getColumnIndex(COL_MOTIVO))
-                val raza = cursor.getString(cursor.getColumnIndex(COL_RAZA_MASCOTA))
+                val especie = cursor.getString(cursor.getColumnIndex(COL_ESPECIE_MASCOTA))
                 val edad = cursor.getString(cursor.getColumnIndex(COL_EDAD_MASCOTA))
-                citas.add(Cita(id, nombreMascota, sexoMascota, chipMascota, dueno, fecha, hora, motivo, raza, edad))
+                citas.add(Cita(id, nombreMascota, sexoMascota, chipMascota, dueno, fecha, hora, motivo, especie, edad))
             } while (cursor.moveToNext())
         }
 
