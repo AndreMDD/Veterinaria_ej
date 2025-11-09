@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ivCalendarIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_calendar_month"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/tvFechaHistorial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:text="25 de Mayo, 2024"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivCalendarIcon"
+            app:layout_constraintTop_toTopOf="@+id/ivCalendarIcon" />
+
+        <TextView
+            android:id="@+id/tvMotivoHistorial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="Motivo: Vacunación anual"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvFechaHistorial"
+            app:layout_constraintTop_toBottomOf="@+id/tvFechaHistorial" />
+
+        <TextView
+            android:id="@+id/tvDiagnosticoLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Diagnóstico:"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/tvMotivoHistorial"
+            app:layout_constraintTop_toBottomOf="@+id/tvMotivoHistorial" />
+
+        <TextView
+            android:id="@+id/tvDiagnosticoHistorial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="El paciente se encuentra en buen estado. Se aplicó la vacuna correspondiente."
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvDiagnosticoLabel"
+            app:layout_constraintTop_toBottomOf="@+id/tvDiagnosticoLabel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

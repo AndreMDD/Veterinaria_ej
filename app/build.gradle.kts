@@ -33,6 +33,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -44,6 +47,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.cardview)
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.github.kizitonwose:calendarview:1.0.4")
+    implementation("com.google.android.material:material:1.12.0") // Added this line
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

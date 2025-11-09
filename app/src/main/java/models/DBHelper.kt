@@ -135,6 +135,18 @@ class DBHelper (context: Context): SQLiteOpenHelper (context, "veterinaria_datab
         return count > 0
     }
 
+    fun checkMascotaExists(nombreMascota: String, nombreDueno: String): Boolean {
+        val db = this.readableDatabase
+        val columns = arrayOf(COL_ID_CITA)
+        val selection = "$COL_NOMBRE_MASCOTA_CITA = ? AND $COL_NOMBRE_DUENO = ?"
+        val selectionArgs = arrayOf(nombreMascota, nombreDueno)
+        val cursor = db.query(TABLA_CITAS, columns, selection, selectionArgs, null, null, null)
+        val count = cursor.count
+        cursor.close()
+        db.close()
+        return count > 0
+    }
+
     @SuppressLint("Range")
     fun getAllCitas(): List<Cita> {
         val citas = mutableListOf<Cita>()

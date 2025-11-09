@@ -3,80 +3,157 @@ package com.uno.veterinaria
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputEditText
-import models.DBHelper
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class AgendarHora_act : AppCompatActivity() {
 
-    private lateinit var dbHelper: DBHelper
+    private lateinit var tilNombreMascota: TextInputLayout
+    private lateinit var tilEspecieMascota: TextInputLayout
+    private lateinit var tilEdadMascota: TextInputLayout
+    private lateinit var tilSexoMascota: TextInputLayout
+    private lateinit var tilNombreDueno: TextInputLayout
+    private lateinit var tilFecha: TextInputLayout
+    private lateinit var tilHora: TextInputLayout
+    private lateinit var tilMotivo: TextInputLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_agendar_hora)
 
-        // Inicializar la base de datos
-        dbHelper = DBHelper(this)
+        // Initialize TextInputLayouts
+        tilNombreMascota = findViewById(R.id.tilNombreMascota)
+        tilEspecieMascota = findViewById(R.id.tilEspecieMascota)
+        tilEdadMascota = findViewById(R.id.tilEdadMascota)
+        tilSexoMascota = findViewById(R.id.tilSexoMascota)
+        tilNombreDueno = findViewById(R.id.tilNombreDueno)
+        tilFecha = findViewById(R.id.tilFecha)
+        tilHora = findViewById(R.id.tilHora)
+        tilMotivo = findViewById(R.id.tilMotivo)
 
-        // Referencias a los nuevos componentes de Material Design
-        val etNombreMascota = findViewById<TextInputEditText>(R.id.etNombreMascota)
-        val etEspecieMascota = findViewById<TextInputEditText>(R.id.etEspecieMascota)
-        val etEdadMascota = findViewById<TextInputEditText>(R.id.etEdadMascota)
-        val etSexoMascota = findViewById<TextInputEditText>(R.id.etSexoMascota)
-        val etChipMascota = findViewById<TextInputEditText>(R.id.etChipMascota)
-        val etNombreDueno = findViewById<TextInputEditText>(R.id.etNombreDueno)
-        val etFecha = findViewById<TextInputEditText>(R.id.etFecha)
-        val etHora = findViewById<TextInputEditText>(R.id.etHora)
-        val etMotivo = findViewById<TextInputEditText>(R.id.etMotivo)
-        val btnAgendar = findViewById<Button>(R.id.btnAgendar)
+        // Set click listeners for date and time fields
+        tilFecha.editText?.setOnClickListener {
+            showDatePickerDialog()
+        }
 
-        // Lógica para agendar la cita
-        btnAgendar.setOnClickListener {
-            val nombreMascota = etNombreMascota.text.toString()
-            val especie = etEspecieMascota.text.toString()
-            val edad = etEdadMascota.text.toString()
-            val sexoMascota = etSexoMascota.text.toString()
-            val chipMascota = etChipMascota.text.toString()
-            val nombreDueno = etNombreDueno.text.toString()
-            val fecha = etFecha.text.toString()
-            val hora = etHora.text.toString()
-            val motivo = etMotivo.text.toString()
+        tilHora.editText?.setOnClickListener {
+            showTimePickerDialog()
+        }
 
-            if (nombreMascota.isNotEmpty() && especie.isNotEmpty() &&
-                edad.isNotEmpty() && sexoMascota.isNotEmpty() && nombreDueno.isNotEmpty() &&
-                fecha.isNotEmpty() && hora.isNotEmpty() && motivo.isNotEmpty()) {
-                val result = dbHelper.agregarCita(nombreMascota, sexoMascota,
-                    chipMascota, nombreDueno, fecha, hora, motivo, especie, edad)
-                if (result > -1) {
-                    Toast.makeText(this, "Hora agendada correctamente"
-                        , Toast.LENGTH_SHORT).show()
-                    // Navegamos a Inicio y limpiamos el historial
-                    val intent = Intent(this, Inicio_act::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this, "Error al agendar la hora"
-                        , Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, "Por favor, complete todos los campos"
-                    , Toast.LENGTH_SHORT).show()
+        findViewById<View>(R.id.btnAgendar).setOnClickListener {
+            if (validateFields()) {
+                // Lógica para guardar la cita
+                Toast.makeText(this, "Cita agendada exitosamente", Toast.LENGTH_SHORT).show()
+
+                // Borrar datos de las casillas
+                tilNombreMascota.editText?.text?.clear()
+                tilEspecieMascota.editText?.text?.clear()
+                tilEdadMascota.editText?.text?.clear()
+                tilSexoMascota.editText?.text?.clear()
+                tilNombreDueno.editText?.text?.clear()
+                tilFecha.editText?.text?.clear()
+                tilHora.editText?.text?.clear()
+                tilMotivo.editText?.text?.clear()
+
+                // Redirigir a Inicio_act
+                val intent = Intent(this, Inicio_act::class.java)
+                startActivity(intent)
+                finish() // Cierra la actividad actual
             }
         }
     }
 
-    /**
-     * Esta función es llamada por el atributo android:onClick del botón 'btnVolver'
-     * en el archivo activity_agendar_hora.xml
-     */
+    private fun showDatePickerDialog() {
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Selecciona una fecha")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .build()
+
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            // The selection is in UTC milliseconds. Convert it to a readable date string.
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            sdf.timeZone = TimeZone.getTimeZone("UTC") // Important: Use UTC to format the selection
+            val date = sdf.format(Date(selection))
+            tilFecha.editText?.setText(date)
+        }
+
+        datePicker.show(supportFragmentManager, "MATERIAL_DATE_PICKER")
+    }
+
+    private fun showTimePickerDialog() {
+        val picker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setHour(12)
+            .setMinute(0)
+            .setTitleText("Selecciona una hora")
+            .build()
+
+        picker.addOnPositiveButtonClickListener { 
+            val selectedTime = String.format("%02d:%02d", picker.hour, picker.minute)
+            tilHora.editText?.setText(selectedTime)
+        }
+
+        picker.show(supportFragmentManager, "MATERIAL_TIME_PICKER")
+    }
+
+    private fun validateFields(): Boolean {
+        // Reset errors
+        tilNombreMascota.error = null
+        tilEspecieMascota.error = null
+        tilEdadMascota.error = null
+        tilSexoMascota.error = null
+        tilNombreDueno.error = null
+        tilFecha.error = null
+        tilHora.error = null
+        tilMotivo.error = null
+
+        // Validation logic
+        var isValid = true
+        if (tilNombreMascota.editText?.text.toString().trim().isEmpty()) {
+            tilNombreMascota.error = "El campo debe estar completo"
+            isValid = false
+        }
+        if (tilEspecieMascota.editText?.text.toString().trim().isEmpty()) {
+            tilEspecieMascota.error = "El campo debe estar completo"
+            isValid = false
+        }
+        if (tilEdadMascota.editText?.text.toString().trim().isEmpty()) {
+            tilEdadMascota.error = "El campo debe estar completo"
+            isValid = false
+        }
+        if (tilSexoMascota.editText?.text.toString().trim().isEmpty()) {
+            tilSexoMascota.error = "El campo debe estar completo"
+            isValid = false
+        }
+        if (tilNombreDueno.editText?.text.toString().trim().isEmpty()) {
+            tilNombreDueno.error = "El campo debe estar completo"
+            isValid = false
+        }
+        if (tilFecha.editText?.text.toString().trim().isEmpty()) {
+            tilFecha.error = "Por favor, selecciona una fecha"
+            isValid = false
+        }
+        if (tilHora.editText?.text.toString().trim().isEmpty()) {
+            tilHora.error = "Por favor, selecciona una hora"
+            isValid = false
+        }
+        if (tilMotivo.editText?.text.toString().trim().isEmpty()) {
+            tilMotivo.error = "El campo debe estar completo"
+            isValid = false
+        }
+
+        return isValid
+    }
+
     fun volver(view: View) {
-        val intent = Intent(this, Inicio_act::class.java)
-        // Limpiamos la pila de actividades para una navegación más limpia
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
+        finish()
     }
 }

@@ -17,12 +17,28 @@ class MainActivity : AppCompatActivity() {
 
         val dbHelper = DBHelper(this)
 
-        // Agregar usuarios de prueba si no existen
+        // Agregar usuarios y mascota de prueba si no existen
         if (!dbHelper.checkUserExists("admin@test.com")) {
             dbHelper.agregarUsuario("Administrador", "admin@test.com", "admin123", "123456789", "admin")
         }
         if (!dbHelper.checkUserExists("user@test.com")) {
             dbHelper.agregarUsuario("Usuario de Prueba", "user@test.com", "user123", "987654321", "user")
+        }
+
+        if (dbHelper.checkUserExists("user@test.com")) {
+            if (!dbHelper.checkMascotaExists("Apolo", "Usuario de Prueba")) {
+                dbHelper.agregarCita(
+                    nombreMascota = "Apolo",
+                    sexoMascota = "Macho",
+                    chipMascota = "123456789012345",
+                    nombreDueno = "Usuario de Prueba",
+                    fecha = "2024-05-20",
+                    hora = "10:00",
+                    motivo = "Vacunación anual",
+                    raza = "Perro",
+                    edad = "5"
+                )
+            }
         }
 
         val etCorreo = findViewById<TextInputEditText>(R.id.etCorreo)

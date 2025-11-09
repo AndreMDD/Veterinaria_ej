@@ -32,7 +32,9 @@ class Registro_act : AppCompatActivity() {
             val contrasena = etContrasena.text.toString()
             val confirmarContrasena = etConfirmarContrasena.text.toString()
 
-            if (nombreCompleto.isNotEmpty() && correo.isNotEmpty() && telefono.isNotEmpty() && contrasena.isNotEmpty() && confirmarContrasena.isNotEmpty()) {
+            if (nombreCompleto.isNotEmpty() && correo.isNotEmpty()
+                && telefono.isNotEmpty() && contrasena.isNotEmpty()
+                && confirmarContrasena.isNotEmpty()) {
                 if (contrasena == confirmarContrasena) {
                     if (!dbHelper.checkUserExists(correo)) {
                         val result = dbHelper.agregarUsuario(nombreCompleto, correo, contrasena, telefono, "user")

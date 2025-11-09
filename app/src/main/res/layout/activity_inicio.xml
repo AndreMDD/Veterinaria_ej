@@ -321,7 +321,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="© 2025 Patitas Felices. Todos los derechos reservados."
+                android:text="© 2025 Exhodia. Todos los derechos reservados."
                 android:layout_marginTop="16dp"
                 android:textSize="12sp"
                 android:textColor="#5f6368"/>

@@ -1,5 +1,6 @@
 package com.uno.veterinaria
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,9 +36,17 @@ class CitaAdapter(private val citas: List<Cita>) : RecyclerView.Adapter<CitaAdap
             tvMotivo.text = cita.motivo
             tvFechaHora.text = "${cita.fecha} - ${cita.hora}"
 
-            // Aquí podrías cambiar el icono según el tipo de mascota, si tuvieras esa información
-            // Por ahora, usamos uno por defecto.
-            // ivIconoMascota.setImageResource(R.drawable.ic_dog) 
+            itemView.setOnClickListener {
+                val context = it.context
+                val intent = Intent(context, FichaClinica_act::class.java).apply {
+                    putExtra("nombreMascota", cita.nombreMascota)
+                    putExtra("especieMascota", cita.raza) // Corregido: 'raza' en lugar de 'especie'
+                    putExtra("edadMascota", cita.edad)
+                    putExtra("fechaCita", "${cita.fecha} - ${cita.hora}")
+                    putExtra("motivoCita", cita.motivo)
+                }
+                context.startActivity(intent)
+            }
         }
     }
 }
