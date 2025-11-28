@@ -14,7 +14,6 @@ import java.util.Locale
 class CitaAdapter(private var citas: List<HistorialCita>) : RecyclerView.Adapter<CitaAdapter.CitaViewHolder>() {
 
     class CitaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Asumimos que los IDs en tu layout 'list_item_cita.xml' son estos.
         // Si la app crashea aquí, es porque los IDs en el XML son diferentes.
         val tvNombreMascota: TextView = itemView.findViewById(R.id.tvNombreMascota)
         val tvNombreDueno: TextView = itemView.findViewById(R.id.tvNombreDueno)
@@ -30,13 +29,12 @@ class CitaAdapter(private var citas: List<HistorialCita>) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: CitaViewHolder, position: Int) {
         val cita = citas[position]
 
-        // Tu API no devuelve nombres, así que mostramos el ID de la mascota.
-        // Para mostrar nombres, necesitarías modificar tu API.
+
         holder.tvNombreMascota.text = "Mascota ID: ${cita.mascotaId}"
         holder.tvNombreDueno.text = ""
         holder.tvNombreDueno.visibility = View.GONE // Ocultamos el campo del dueño ya que no hay datos
 
-        // Convertimos el timestamp (número largo) a un formato de fecha y hora legible
+        // Formateamos la fecha y la hora para que sea más legible
         val formattedDate = try {
             val sdf = SimpleDateFormat("dd/MM/yyyy 'a las' HH:mm", Locale.getDefault())
             val netDate = Date(cita.fechaHoraTimestamp)

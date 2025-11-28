@@ -72,7 +72,7 @@ class AgendarHora_act : AppCompatActivity() {
                     fecha,
                     hora,
                     motivo,
-                    especieMascota, // Corregido
+                    especieMascota,
                     edadMascota
                 )
 
