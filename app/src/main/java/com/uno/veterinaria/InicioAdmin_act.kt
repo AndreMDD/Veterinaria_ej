@@ -27,8 +27,7 @@ class InicioAdmin_act : AppCompatActivity() {
         }
 
         btnVerHistorialMascotas.setOnClickListener {
-            Toast.makeText(this, "Función para ver historial de mascotas próximamente"
-                , Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Función para ver historial de mascotas próximamente", Toast.LENGTH_SHORT).show()
         }
 
         btnCerrarSesion.setOnClickListener {

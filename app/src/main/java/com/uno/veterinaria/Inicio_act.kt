@@ -3,11 +3,18 @@ package com.uno.veterinaria
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.Observer
+import com.uno.veterinaria.viewmodel.InicioViewModel
 import de.hdodenhof.circleimageview.CircleImageView
 
 class Inicio_act : AppCompatActivity() {
+
+    private val viewModel: InicioViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio)
@@ -16,6 +23,7 @@ class Inicio_act : AppCompatActivity() {
         val appointmentButton = findViewById<Button>(R.id.appointmentButton)
         val fichaClinicaBtn = findViewById<Button>(R.id.fichaClinica_btn)
         val profileImage = findViewById<CircleImageView>(R.id.profile_image)
+        val locationButton = findViewById<Button>(R.id.locationButton)
 
         horasBtn.setOnClickListener {
             val intent = Intent(this, AgendarHora_act::class.java)
@@ -31,6 +39,19 @@ class Inicio_act : AppCompatActivity() {
             val intent = Intent(this, FichaClinica_act::class.java)
             startActivity(intent)
         }
+
+        locationButton.setOnClickListener {
+            viewModel.cargarUbicacion()
+        }
+
+        viewModel.ubicacion.observe(this, Observer { ubicacion ->
+            Toast.makeText(this, "Nuestra dirección es: ${ubicacion.direccion}", Toast.LENGTH_LONG).show()
+            // Opcional: podrías abrir un mapa
+            // val gmmIntentUri = Uri.parse("geo:${ubicacion.latitud},${ubicacion.longitud}?q=${Uri.encode(ubicacion.direccion)}")
+            // val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            // mapIntent.setPackage("com.google.android.apps.maps")
+            // startActivity(mapIntent)
+        })
 
         // TODO: Cargar la imagen del usuario desde la base de datos o SharedPreferences
         // profileImage.setImageURI(...) 

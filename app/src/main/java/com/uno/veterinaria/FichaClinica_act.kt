@@ -7,40 +7,22 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import models.Cita
-import models.DBHelper
+import com.uno.veterinaria.viewmodel.FichaClinicaViewModel
+import models.HistorialCita
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class FichaClinica_act : AppCompatActivity() {
 
-    // Se define un Adaptador interno para el historial, que usa el layout "list_item_historial.xml"
-    inner class HistorialAdapter(private val citas: List<Cita>) : RecyclerView.Adapter<HistorialAdapter.HistorialViewHolder>() {
-
-        inner class HistorialViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            // Asumimos que los IDs en list_item_historial.xml son estos. Si falla, es por los IDs.
-            val tvFechaHistorial: TextView = itemView.findViewById(R.id.tvFechaHistorial)
-            val tvMotivoHistorial: TextView = itemView.findViewById(R.id.tvMotivoHistorial)
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistorialViewHolder {
-            // Inflamos el layout específico para el historial del usuario.
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_historial, parent, false)
-            return HistorialViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: HistorialViewHolder, position: Int) {
-            val cita = citas[position]
-            holder.tvFechaHistorial.text = "${cita.fecha} - ${cita.hora}"
-            holder.tvMotivoHistorial.text = "Motivo: ${cita.motivo}"
-        }
-
-        override fun getItemCount(): Int = citas.size
-    }
+    private val viewModel: FichaClinicaViewModel by viewModels()
+    private lateinit var historialAdapter: HistorialAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,37 +33,59 @@ class FichaClinica_act : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        // 1. Obtener el nombre del usuario que inició sesión
+        setupRecyclerView()
+
         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val userName = sharedPreferences.getString("user_name", null)
 
         if (userName != null) {
-            // 2. Buscar las citas de ese usuario en la base de datos
-            val dbHelper = DBHelper(this)
-            val citasDelDueno = dbHelper.getCitasByDueno(userName)
+            viewModel.cargarCitas(userName)
+        }
 
-            if (citasDelDueno.isNotEmpty()) {
-                // 3. Poblar la información de la mascota y próxima cita
-                val primeraCita = citasDelDueno[0] // Asumimos que todas las citas son de la misma mascota
-                findViewById<TextView>(R.id.tvNombreMascotaFicha).text = primeraCita.nombreMascota
-                findViewById<TextView>(R.id.tvEspecieMascotaFicha).text = primeraCita.especie
-                findViewById<TextView>(R.id.tvEdadMascotaFicha).text = "${primeraCita.edad} años"
-
-                // Lógica para encontrar la próxima cita (la más cercana en el futuro)
-                val proximaCita = citasDelDueno.sortedBy { 
-                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it.fecha)?.time 
-                }.lastOrNull()
-                
-                if(proximaCita != null) {
-                    findViewById<TextView>(R.id.tvFechaProximaCita).text = "${proximaCita.fecha} - ${proximaCita.hora}"
-                    findViewById<TextView>(R.id.tvMotivoProximaCita).text = "Motivo: ${proximaCita.motivo}"
-                }
-
-                // 4. Mostrar el historial en la lista
-                val rvHistorial: RecyclerView = findViewById(R.id.rvHistorialClinico)
-                rvHistorial.layoutManager = LinearLayoutManager(this)
-                rvHistorial.adapter = HistorialAdapter(citasDelDueno)
+        viewModel.citas.observe(this, Observer { citas ->
+            if (citas.isNotEmpty()) {
+                populateUI(citas)
             }
+        })
+    }
+
+    private fun setupRecyclerView() {
+        val rvHistorial: RecyclerView = findViewById(R.id.rvHistorialClinico)
+        rvHistorial.layoutManager = LinearLayoutManager(this)
+        historialAdapter = HistorialAdapter(emptyList())
+        rvHistorial.adapter = historialAdapter
+    }
+
+    private fun populateUI(citas: List<HistorialCita>) {
+        val primeraCita = citas[0]
+        // CORRECCIÓN: Usamos los campos que sí existen en la API
+        findViewById<TextView>(R.id.tvNombreMascotaFicha).text = "Mascota ID: ${primeraCita.mascotaId}"
+
+        // CORRECCIÓN: Ocultamos los campos que no vienen en la API
+        findViewById<TextView>(R.id.tvEspecieMascotaFicha).visibility = View.GONE
+        findViewById<TextView>(R.id.tvEdadMascotaFicha).visibility = View.GONE
+
+        // CORRECCIÓN: Ordenamos por el timestamp
+        val proximaCita = citas.sortedBy { it.fechaHoraTimestamp }.lastOrNull()
+        
+        if(proximaCita != null) {
+            // CORRECCIÓN: Formateamos el timestamp para mostrarlo
+            val formattedDate = formatDate(proximaCita.fechaHoraTimestamp)
+            findViewById<TextView>(R.id.tvFechaProximaCita).text = formattedDate
+            findViewById<TextView>(R.id.tvMotivoProximaCita).text = "Motivo: ${proximaCita.motivo}"
+        }
+
+        historialAdapter.actualizarCitas(citas)
+    }
+
+    // Función de utilidad para formatear el timestamp
+    private fun formatDate(timestamp: Long): String {
+        return try {
+            val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
+            val netDate = Date(timestamp)
+            sdf.format(netDate)
+        } catch (e: Exception) {
+            "Fecha inválida"
         }
     }
 
@@ -90,5 +94,32 @@ class FichaClinica_act : AppCompatActivity() {
             finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    inner class HistorialAdapter(private var citas: List<HistorialCita>) : RecyclerView.Adapter<HistorialAdapter.HistorialViewHolder>() {
+
+        inner class HistorialViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val tvFechaHistorial: TextView = itemView.findViewById(R.id.tvFechaHistorial)
+            val tvMotivoHistorial: TextView = itemView.findViewById(R.id.tvMotivoHistorial)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistorialViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_historial, parent, false)
+            return HistorialViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: HistorialViewHolder, position: Int) {
+            val cita = citas[position]
+            // CORRECCIÓN: Formateamos el timestamp para mostrar la fecha y hora
+            holder.tvFechaHistorial.text = formatDate(cita.fechaHoraTimestamp)
+            holder.tvMotivoHistorial.text = "Motivo: ${cita.motivo}"
+        }
+
+        override fun getItemCount(): Int = citas.size
+
+        fun actualizarCitas(nuevasCitas: List<HistorialCita>) {
+            citas = nuevasCitas
+            notifyDataSetChanged()
+        }
     }
 }
