@@ -7,13 +7,15 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.uno.veterinaria.repository.CitasRepository
 import com.uno.veterinaria.viewmodel.FichaClinicaViewModel
+import com.uno.veterinaria.viewmodel.FichaClinicaViewModelFactory
 import models.HistorialCita
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -21,7 +23,13 @@ import java.util.Locale
 
 class FichaClinica_act : AppCompatActivity() {
 
-    private val viewModel: FichaClinicaViewModel by viewModels()
+    // CORRECCIÓN: Se inicializa el ViewModel usando la nueva Factory
+    private val viewModel: FichaClinicaViewModel by lazy {
+        val repository = CitasRepository() // Creamos la dependencia
+        val factory = FichaClinicaViewModelFactory(repository) // Creamos la fábrica
+        ViewModelProvider(this, factory)[FichaClinicaViewModel::class.java] // Creamos el ViewModel
+    }
+
     private lateinit var historialAdapter: HistorialAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,18 +66,14 @@ class FichaClinica_act : AppCompatActivity() {
 
     private fun populateUI(citas: List<HistorialCita>) {
         val primeraCita = citas[0]
-        // CORRECCIÓN: Usamos los campos que sí existen en la API
         findViewById<TextView>(R.id.tvNombreMascotaFicha).text = "Mascota ID: ${primeraCita.mascotaId}"
 
-        // CORRECCIÓN: Ocultamos los campos que no vienen en la API
         findViewById<TextView>(R.id.tvEspecieMascotaFicha).visibility = View.GONE
         findViewById<TextView>(R.id.tvEdadMascotaFicha).visibility = View.GONE
 
-        // CORRECCIÓN: Ordenamos por el timestamp
         val proximaCita = citas.sortedBy { it.fechaHoraTimestamp }.lastOrNull()
         
         if(proximaCita != null) {
-            // CORRECCIÓN: Formateamos el timestamp para mostrarlo
             val formattedDate = formatDate(proximaCita.fechaHoraTimestamp)
             findViewById<TextView>(R.id.tvFechaProximaCita).text = formattedDate
             findViewById<TextView>(R.id.tvMotivoProximaCita).text = "Motivo: ${proximaCita.motivo}"
@@ -78,7 +82,6 @@ class FichaClinica_act : AppCompatActivity() {
         historialAdapter.actualizarCitas(citas)
     }
 
-    // Función de utilidad para formatear el timestamp
     private fun formatDate(timestamp: Long): String {
         return try {
             val sdf = SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())
@@ -110,7 +113,6 @@ class FichaClinica_act : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: HistorialViewHolder, position: Int) {
             val cita = citas[position]
-            // CORRECCIÓN: Formateamos el timestamp para mostrar la fecha y hora
             holder.tvFechaHistorial.text = formatDate(cita.fechaHoraTimestamp)
             holder.tvMotivoHistorial.text = "Motivo: ${cita.motivo}"
         }

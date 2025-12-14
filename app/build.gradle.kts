@@ -48,7 +48,6 @@ dependencies {
     implementation(libs.androidx.cardview)
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.kizitonwose:calendarview:1.0.4")
-    implementation("com.google.android.material:material:1.12.0")
 
     // Retrofit y Gson
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -66,7 +65,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.activity:activity-ktx:1.9.0")
 
+    // Glide para cargar imágenes
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Dependencias de Test
     testImplementation(libs.junit)
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("io.mockk:mockk:1.13.10")
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

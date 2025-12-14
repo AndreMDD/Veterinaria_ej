@@ -8,9 +8,8 @@ import com.uno.veterinaria.repository.CitasRepository
 import kotlinx.coroutines.launch
 import models.HistorialCita
 
-class FichaClinicaViewModel : ViewModel() {
-
-    private val repository = CitasRepository()
+// CORRECCIÓN: El repositorio ahora se recibe en el constructor (Inyección de Dependencias)
+class FichaClinicaViewModel(private val repository: CitasRepository) : ViewModel() {
 
     private val _citas = MutableLiveData<List<HistorialCita>>()
     val citas: LiveData<List<HistorialCita>> = _citas
@@ -18,14 +17,11 @@ class FichaClinicaViewModel : ViewModel() {
     fun cargarCitas(dueno: String) {
         viewModelScope.launch {
             try {
-                // CORRECCIÓN: Ahora le pasamos el 'dueno' directamente a la llamada
-                // del repositorio, que a su vez se lo pasará a la API.
-                // Ya no es necesario filtrar la lista en la app.
                 val citasDelDueno = repository.getHistorialCitas(dueno)
                 _citas.postValue(citasDelDueno)
 
             } catch (e: Exception) {
-                // Manejar el error, por ejemplo, posteando un estado de error a la UI
+                // Manejar el error
             }
         }
     }
