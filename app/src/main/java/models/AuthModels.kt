@@ -4,19 +4,19 @@ import com.google.gson.annotations.SerializedName
 
 /**
  * Modelo de datos para la petición de inicio de sesión (login).
- * Contiene las credenciales que el usuario introduce.
  */
 data class LoginRequest(
-    @SerializedName("correo")
+    @SerializedName("Correo")
     val correo: String,
 
-    @SerializedName("contrasena")
+    @SerializedName("Contrasena")
     val contrasena: String
 )
 
 /**
  * Modelo de datos para la respuesta exitosa del inicio de sesión.
- * Contiene el token de autenticación y el rol del usuario, que la API devuelve.
+ * REVERSIÓN: Se corrige @SerializedName("role") de vuelta a @SerializedName("rol") 
+ * para que coincida con la respuesta real del backend.
  */
 data class LoginResponse(
     @SerializedName("authToken")

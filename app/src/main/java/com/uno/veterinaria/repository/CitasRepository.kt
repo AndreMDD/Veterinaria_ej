@@ -1,5 +1,6 @@
 package com.uno.veterinaria.repository
 
+import com.uno.veterinaria.network.AuthRetrofitClient
 import com.uno.veterinaria.network.RetrofitClient
 import models.AgendarCitaRequest
 import models.HistorialCita
@@ -9,30 +10,40 @@ import models.SignUpRequest
 import models.Ubicacion
 import retrofit2.Response
 
+/**
+ * Repositorio que maneja toda la lógica de datos de la aplicación.
+ * Ahora es capaz de comunicarse con dos fuentes de API diferentes.
+ */
 class CitasRepository {
 
-    private val apiService = RetrofitClient.instance
+    // Se crean dos instancias de ApiService, una para cada cliente de Retrofit.
+    private val citasApiService = RetrofitClient.instance
+    private val authApiService = AuthRetrofitClient.instance
 
     suspend fun getHistorialCitas(dueno: String? = null): List<HistorialCita> {
-        return apiService.getHistorialCitas(dueno)
+        // Usa el cliente de citas
+        return citasApiService.getHistorialCitas(dueno)
     }
 
     suspend fun agendarCita(request: AgendarCitaRequest): Response<HistorialCita> {
-        return apiService.agendarCita(request)
+        // Usa el cliente de citas
+        return citasApiService.agendarCita(request)
     }
 
     suspend fun getUbicacion(): Ubicacion {
-        return apiService.getUbicacion()
+        // Usa el cliente de citas
+        return citasApiService.getUbicacion()
     }
 
     // --- Funciones de Autenticación ---
 
-    // CORRECCIÓN: La función ahora devuelve un LoginResponse para manejar el token de auto-login.
     suspend fun signup(request: SignUpRequest): Response<LoginResponse> {
-        return apiService.signup(request)
+        // Usa el cliente de autenticación
+        return authApiService.signup(request)
     }
 
     suspend fun login(request: LoginRequest): Response<LoginResponse> {
-        return apiService.login(request)
+        // Usa el cliente de autenticación
+        return authApiService.login(request)
     }
 }

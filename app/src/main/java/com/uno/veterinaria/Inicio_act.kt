@@ -4,16 +4,25 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.uno.veterinaria.repository.CitasRepository
+import com.uno.veterinaria.repository.WeatherRepository
 import com.uno.veterinaria.viewmodel.InicioViewModel
+import com.uno.veterinaria.viewmodel.InicioViewModelFactory
 import de.hdodenhof.circleimageview.CircleImageView
 
 class Inicio_act : AppCompatActivity() {
 
-    private val viewModel: InicioViewModel by viewModels()
+    // CORRECCIÓN: Se inicializa el ViewModel usando la fábrica para inyectar las dependencias.
+    private val viewModel: InicioViewModel by lazy {
+        val citasRepository = CitasRepository()
+        val weatherRepository = WeatherRepository()
+        val factory = InicioViewModelFactory(citasRepository, weatherRepository)
+        ViewModelProvider(this, factory)[InicioViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +55,7 @@ class Inicio_act : AppCompatActivity() {
 
         viewModel.ubicacion.observe(this, Observer { ubicacion ->
             Toast.makeText(this, "Nuestra dirección es: ${ubicacion.direccion}", Toast.LENGTH_LONG).show()
-            // Opcional: podrías abrir un mapa
-            // val gmmIntentUri = Uri.parse("geo:${ubicacion.latitud},${ubicacion.longitud}?q=${Uri.encode(ubicacion.direccion)}")
-            // val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-            // mapIntent.setPackage("com.google.android.apps.maps")
-            // startActivity(mapIntent)
         })
-
-        // TODO: Cargar la imagen del usuario desde la base de datos o SharedPreferences
-        // profileImage.setImageURI(...) 
 
         profileImage.setOnClickListener { view ->
             val popup = PopupMenu(this, view)
