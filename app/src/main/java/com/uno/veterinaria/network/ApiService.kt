@@ -25,11 +25,11 @@ interface ApiService {
     @GET("ubicacion")
     suspend fun getUbicacion(): Ubicacion
 
-    // --- Endpoints de Autenticación (CORREGIDOS) ---
+    // --- Endpoints de Autenticación (CORRECCIÓN FINAL) ---
 
-    @POST("/auth/signup") // Se añade la barra inicial
-    suspend fun signup(@Body request: SignUpRequest): Response<Unit>
+    @POST("auth/signup") // Se elimina la barra inicial para evitar el doble slash
+    suspend fun signup(@Body request: SignUpRequest): Response<LoginResponse>
 
-    @POST("/auth/login") // Se añade la barra inicial
+    @POST("auth/login") // Se elimina la barra inicial para evitar el doble slash
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 }

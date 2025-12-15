@@ -25,9 +25,10 @@ class CitasRepository {
         return apiService.getUbicacion()
     }
 
-    // --- Funciones de Autenticación (NUEVAS) ---
+    // --- Funciones de Autenticación ---
 
-    suspend fun signup(request: SignUpRequest): Response<Unit> {
+    // CORRECCIÓN: La función ahora devuelve un LoginResponse para manejar el token de auto-login.
+    suspend fun signup(request: SignUpRequest): Response<LoginResponse> {
         return apiService.signup(request)
     }
 
